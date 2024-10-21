@@ -71,24 +71,23 @@ async function addTodo() {
     }
 
     async function updateTodo(todoId) {
-        const newCompletedStatus =  true;
-
-        const response = await fetch(`/todos/${todoId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({completed: newCompletedStatus }),
-        });
-// curl -X 'PUT'   'http://127.0.0.1:8000/todos/239'   -H 'accept: application/json'  
-//  -H 'Content-Type: application/json'   -d '{"completed": true}'
-        if (response.ok) {
-            alert('Todo updated!');
-            window.location.reload();
-        } else {
-            alert('Failed to update Todo.');
+    const response = await fetch(`/todos/${todoId}/toggle`, {  // 新しいエンドポイントに変更
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
         }
+    });
+
+    if (response.ok) {
+        alert('Todo updated!');
+        window.location.reload();
+    } else {
+        const errorText = await response.text();
+        console.error('Failed to update Todo:', errorText);
+        alert(`Failed to update Todo: ${errorText}`);
     }
+    }
+
 
 
 </script>

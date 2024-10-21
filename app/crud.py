@@ -19,6 +19,7 @@ def delete_todo(db: Session, todo_id: int):
 def get_todo_by_id(db: Session, todo_id: int):
     return db.query(models.Todo).filter(models.Todo.id == todo_id).first()
 
+
 def create_todo(db: Session, todo: schemas.TodoCreate):
     db_todo = models.Todo(title=todo.title)  # completed はデフォルトで False
     db.add(db_todo)
