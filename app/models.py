@@ -2,7 +2,7 @@
 
 from sqlalchemy import Column, Integer, String, Boolean
 from .database import Base  # Base は declarative_base() で定義されており、すべてのモデル（テーブル定義）が継承する基盤クラス
-
+ 
 class Todo(Base):   # ここでDBに対応し、SQLAlchemyがDBを操作できるようになる
     __tablename__ = "todos" # 名前の定義
 
