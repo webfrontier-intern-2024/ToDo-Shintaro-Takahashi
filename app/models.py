@@ -7,7 +7,8 @@ class Todo(Base):   # ここでDBに対応し、SQLAlchemyがDBを操作でき�
     __tablename__ = "todos" # 名前の定義
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
+    title = Column(String, index=True)  # String 型で定義
     completed = Column(Boolean, default=False)
 
 # indexをTrueにすると、そのカラムにインデックスが作成される。インデックスは、データベースの検索を高速化するためのもので、インデックスが作成されているカラムでの検索は高速になる。インデックスを作成することで、データベースの容量は増えるが、検索速度が向上する。
+

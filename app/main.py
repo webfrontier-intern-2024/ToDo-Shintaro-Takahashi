@@ -60,3 +60,14 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
 def read_todos_html(request: Request, db: Session = Depends(get_db)):
     todos = crud.get_todos(db)
     return templates.TemplateResponse("todos.html", {"request": request, "todos": todos})
+
+@app.put("/todos/{todo_id}", response_model=schemas.Todo)
+def update_todo(todo_id: int, todo: schemas.TodoCreate, db: Session = Depends(get_db)):
+    db_todo = crud.get_todo_by_id(db, todo_id=todo_id)
+    if not db_todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
+
+    db_todo.completed = todo.completed  # completed を更新
+    db.commit()
+    db.refresh(db_todo)
+    return db_todo
