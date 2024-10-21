@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # ここに、指定のデータベースのユザネ、パスワードを指定する
-DATABASE_URL = "postgresql://maeda:maedanobu723@localhost/todo_app"
+DATABASE_URL = "postgresql://codeserver:rH8,KeGa@localhost/todo_app"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
