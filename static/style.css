@@ -47,6 +47,7 @@ h1 {
     color: #7a7a7a;
     margin: auto;
     margin-top: 20px;
+    margin-bottom: 20px;
     width: 500px;
     height: 100px;
     box-shadow: 0 5px 10px rgba(101, 7, 136, 0.2);
@@ -62,11 +63,14 @@ h1 {
     border-bottom-style: dotted;
     border-bottom-width: 2px;
 }
-
 .todo-status {
     text-align: left;
     margin-left: 20px;
     padding-bottom: 10px;
+    width: 92%;
+    display: flex;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
 }
 
 

@@ -10,12 +10,16 @@
     <main>
         <h1>Todo List</h1>
         {% for todo in todos %}
-            <div class="todo-contents">
+            <dev class="todo-contents">
                 <dev class="todo-name">{{ todo.title }}</dev>
-                <dev class="todo-status">{% if todo.completed %}Complete{% else %}No yet{% endif %}</div>
+                <dev class="todo-status">
+                    <dev class="status">{% if todo.completed %}Complete{% else %}No yet{% endif %}</dev>
+                    <dev class="buttons">
+                        <button onclick="deleteTodo({{ todo.id }})">DELETE</button>
+                        <button onclick="updateTodo({{ todo.id }})">CLEAR</button>
+                    </dev>
+                </dev>
             </dev>
-            <button onclick="deleteTodo({{ todo.id }})">Delete</button>
-            <button onclick="updateTodo({{ todo.id }})">Toggle Complete</button>
         {% endfor %}
     </main>
     <img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
@@ -27,7 +31,9 @@
     <script>
         async function addTodo() {
             const title = document.getElementById('new-todo-title').value;
-            if (!title.trim()) {
+                console.log('Adding new Todo:', title);
+
+                if (!title.trim()) {
                 alert('Please enter a title');
                 return;
             }
@@ -38,10 +44,16 @@
                 },
                 body: JSON.stringify({ title: title }),
             });
-            if (!response.ok) {
+            if (response.ok) {
+                alert('Todo added!');
+                window.location.reload(); // ページをリロードして、更新されたTodoリストを表示
+            } else {
+                const errorText = await response.text();
+                console.error('Failed to add Todo:', errorText);
                 alert('Failed to add Todo.');
             }
         }
+
 
         async function deleteTodo(todoId) {
             const response = await fetch(`/todos/${todoId}`, {
@@ -49,6 +61,8 @@
             });
             if (!response.ok) {
                 alert('Failed to delete Todo.');
+            }else {
+                window.location.reload();
             }
         }
 
@@ -63,6 +77,9 @@
                 const errorText = await response.text();
                 console.error('Failed to update Todo:', errorText);
                 alert(`Failed to update Todo: ${errorText}`);
+            } else {
+                window.location.reload();
+
             }
         }
     </script>
