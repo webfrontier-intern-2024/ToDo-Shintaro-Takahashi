@@ -60,3 +60,15 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
 def read_todos_html(request: Request, db: Session = Depends(get_db)):
     todos = crud.get_todos(db)
     return templates.TemplateResponse("todos.html", {"request": request, "todos": todos})
+
+@app.put("/todos/{todo_id}/toggle", response_model=schemas.Todo)
+def toggle_todo_completion(todo_id: int, db: Session = Depends(get_db)):
+    db_todo = crud.get_todo_by_id(db, todo_id=todo_id)
+    if not db_todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
+
+    # completed の状態をトグル
+    db_todo.completed = not db_todo.completed
+    db.commit()
+    db.refresh(db_todo)
+    return db_todo

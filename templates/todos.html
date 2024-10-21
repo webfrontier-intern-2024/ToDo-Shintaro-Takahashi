@@ -4,14 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
 </head>
 <body>
+    <main>
     <h1>Todo List</h1>
-    <ul>
-        {% for todo in todos %}
-            <li>{{ todo.title }} - {% if todo.completed %}Completed{% else %}Incomplete{% endif %}</li>
-        {% endfor %}
-    </ul>
+    {% for todo in todos %}
+
+
+        <div class="todo-contents">
+            <dev class="todo-name">{{ todo.title }}</dev>
+            <dev class="todo-status">{% if todo.completed %}Complete{% else %}No yet{% endif %}</div>
+        </dev>
+
+        <button onclick="deleteTodo({{ todo.id }})">Delete</button>
+        <button onclick="updateTodo({{ todo.id }})">Toggle Complete</button>
+
+
+    {% endfor %}
+
+    
+
+</main>
+<img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
+
+<h2>Add a new Todo</h2>
+<input type="text" id="new-todo-title" placeholder="New Todo">
+<button onclick="addTodo()">Add Todo</button>
+
+<script>
+async function addTodo() {
+    const title = document.getElementById('new-todo-title').value;
+
+    if (!title.trim()) {
+        alert('Please enter a title');
+        return;
+    }
+
+    const response = await fetch('/todos/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: title }),
+    });
+
+    if (response.ok) {
+        alert('Todo added!');
+        window.location.reload(); // ページをリロードして、更新されたTodoリストを表示
+    } else {
+        alert('Failed to add Todo.');
+    }
+}
+
+
+    async function deleteTodo(todoId) {
+        const response = await fetch(`/todos/${todoId}`, {
+            method: 'DELETE',
+        });
+        if (response.ok) {
+            alert('Todo deleted!');
+            window.location.reload();
+        } else {
+            alert('Failed to delete Todo.');
+        }
+    }
+
+    async function updateTodo(todoId) {
+    const response = await fetch(`/todos/${todoId}/toggle`, {  // 新しいエンドポイントに変更
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+
+    if (response.ok) {
+        alert('Todo updated!');
+        window.location.reload();
+    } else {
+        const errorText = await response.text();
+        console.error('Failed to update Todo:', errorText);
+        alert(`Failed to update Todo: ${errorText}`);
+    }
+    }
+
+
+
+</script>
 </body>
 </html>
