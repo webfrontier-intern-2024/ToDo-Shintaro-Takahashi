@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 # Todoの取得
-def get_todos(db: Session, skip: int = 0, limit: int = 10):
+def get_todos(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Todo).offset(skip).limit(limit).all()
 
 # Todoの削除

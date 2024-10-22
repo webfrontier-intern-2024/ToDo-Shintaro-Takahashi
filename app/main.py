@@ -45,7 +45,7 @@ def create_todo(todo: schemas.TodoCreate, db: Session = Depends(get_db)):
     return crud.create_todo(db=db, todo=todo)
 
 @app.get("/todos/", response_model=List[schemas.Todo])
-def read_todos(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def read_todos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     todos = crud.get_todos(db, skip=skip, limit=limit)
     return todos
 
@@ -60,6 +60,12 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
 def read_todos_html(request: Request, db: Session = Depends(get_db)):
     todos = crud.get_todos(db)
     return templates.TemplateResponse("todos.html", {"request": request, "todos": todos})
+
+@app.get("/todos/clear", response_class=HTMLResponse)
+def read_todos_html(request: Request, db: Session = Depends(get_db)):
+    todos = crud.get_todos(db)
+    return templates.TemplateResponse("clear.html", {"request": request, "todos": todos})
+
 
 @app.put("/todos/{todo_id}/toggle", response_model=schemas.Todo)
 def toggle_todo_completion(todo_id: int, db: Session = Depends(get_db)):

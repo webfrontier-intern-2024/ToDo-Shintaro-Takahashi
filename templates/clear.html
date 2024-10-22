@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear List</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+    <main>
+        <h1>Clear List</h1>
+        <button class="custom-btn btn-mode"><span><a href="index" style="text-decoration:none;">return</a></span></button> 
+        {% for todo in todos %}
+        {% if todo.completed %}
+            <dev class="todo-contents">
+                <dev class="todo-name">{{ todo.title }}</dev>
+                <dev class="todo-status">
+                    <dev class="status">{% if todo.completed %}Clear{% endif %}</dev>
+                    <dev class="buttons">
+                        <button class="custom-btn btn-delete" onclick="deleteTodo({{ todo.id }})"><span>DELETE</span></button>
+                        <button class="custom-btn btn-clear" onclick="updateTodo({{ todo.id }})"><span>ReTRY</span></button>
+                    </dev>
+                </dev>
+            </dev>
+        {% endif %}
+        {% endfor %}
+    </main>
+    <img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
+
+
+    <script>
+        async function deleteTodo(todoId) {
+            const response = await fetch(`/todos/${todoId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                alert('Failed to delete Todo.');
+            }else {
+                window.location.reload();
+            }
+        }
+
+        async function updateTodo(todoId) {
+            const response = await fetch(`/todos/${todoId}/toggle`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Failed to update Todo:', errorText);
+                alert(`Failed to update Todo: ${errorText}`);
+            } else {
+                window.location.reload();
+
+            }
+        }
+    </script>
+</body>
+</html>
