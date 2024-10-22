@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List</title>
+    <title>Clear List</title>
     <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
 </head>
 <body>
     <main>
-        <h1>Todo List</h1>
+        <h1>Clear List</h1>
         {% for todo in todos %}
-        {% if not todo.completed %}
+        {% if todo.completed %}
             <dev class="todo-contents">
                 <dev class="todo-name">{{ todo.title }}</dev>
                 <dev class="todo-status">
-                    <dev class="status">{% if not todo.completed %}No yet{% endif %}</dev>
+                    <dev class="status">{{todo.completed }}</dev>
                     <dev class="buttons">
                         <button onclick="deleteTodo({{ todo.id }})">DELETE</button>
                         <button class="custom-btn btn-6" onclick="updateTodo({{ todo.id }})"><span>CLEAR</span></button>
