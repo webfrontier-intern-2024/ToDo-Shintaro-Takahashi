@@ -10,20 +10,21 @@
     <main>
         <h1>Todo List</h1>
         {% for todo in todos %}
-        {% if not todo.completed %}
-            <dev class="todo-contents">
-                <dev class="todo-name">{{ todo.title }}</dev>
-                <dev class="todo-status">
-                    <dev class="status">{% if not todo.completed %}No yet{% endif %}</dev>
-                    <dev class="buttons">
-                        <button onclick="deleteTodo({{ todo.id }})">DELETE</button>
-                        <button class="custom-btn btn-6" onclick="updateTodo({{ todo.id }})"><span>CLEAR</span></button>
+            {% if not todo.completed %}
+                <dev class="todo-contents">
+                    <dev class="todo-name">{{ todo.title }}</dev>
+                    <dev class="todo-status">
+                        <dev class="status">{% if not todo.completed %}No yet{% endif %}</dev>
+                        <dev class="buttons">
+                            <button class="custom-btn btn-delete" onclick="deleteTodo({{ todo.id }})"><span>DELETE</span></button>
+                            <button class="custom-btn btn-clear" onclick="updateTodo({{ todo.id }})"><span>CLEAR</span></button>
+                        </dev>
                     </dev>
                 </dev>
-            </dev>
-        {% endif %}
+            {% endif %}
         {% endfor %}
     </main>
+
     <img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
 
     <h2>Add a new Todo</h2>
@@ -48,7 +49,7 @@
             });
             if (response.ok) {
                 alert('Todo added!');
-                window.location.reload(); // ページをリロードして、更新されたTodoリストを表示
+                window.location.reload();
             } else {
                 const errorText = await response.text();
                 console.error('Failed to add Todo:', errorText);

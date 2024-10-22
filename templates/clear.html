@@ -14,10 +14,10 @@
             <dev class="todo-contents">
                 <dev class="todo-name">{{ todo.title }}</dev>
                 <dev class="todo-status">
-                    <dev class="status">{{todo.completed }}</dev>
+                    <dev class="status">{% if todo.completed %}Clear{% endif %}</dev>
                     <dev class="buttons">
-                        <button onclick="deleteTodo({{ todo.id }})">DELETE</button>
-                        <button class="custom-btn btn-6" onclick="updateTodo({{ todo.id }})"><span>CLEAR</span></button>
+                        <button class="custom-btn btn-delete" onclick="deleteTodo({{ todo.id }})"><span>DELETE</span></button>
+                        <button class="custom-btn btn-clear" onclick="updateTodo({{ todo.id }})"><span>ReTRY</span></button>
                     </dev>
                 </dev>
             </dev>
