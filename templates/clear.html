@@ -9,6 +9,7 @@
 <body>
     <main>
         <h1>Clear List</h1>
+        <button class="custom-btn btn-mode"><span><a href="index" style="text-decoration:none;">return</a></span></button> 
         {% for todo in todos %}
         {% if todo.completed %}
             <dev class="todo-contents">
@@ -26,37 +27,8 @@
     </main>
     <img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
 
-    <h2>Add a new Todo</h2>
-    <input type="text" id="new-todo-title" placeholder="New Todo">
-    <button onclick="addTodo()">Add Todo</button>
 
     <script>
-        async function addTodo() {
-            const title = document.getElementById('new-todo-title').value;
-                console.log('Adding new Todo:', title);
-
-                if (!title.trim()) {
-                alert('Please enter a title');
-                return;
-            }
-            const response = await fetch('/todos/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ title: title }),
-            });
-            if (response.ok) {
-                alert('Todo added!');
-                window.location.reload(); // ページをリロードして、更新されたTodoリストを表示
-            } else {
-                const errorText = await response.text();
-                console.error('Failed to add Todo:', errorText);
-                alert('Failed to add Todo.');
-            }
-        }
-
-
         async function deleteTodo(todoId) {
             const response = await fetch(`/todos/${todoId}`, {
                 method: 'DELETE',

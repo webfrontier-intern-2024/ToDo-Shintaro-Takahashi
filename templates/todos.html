@@ -9,6 +9,10 @@
 <body>
     <main>
         <h1>Todo List</h1>
+        <button class="custom-btn btn-mode"><span><a href="clear" style="text-decoration:none; color:rgb(0, 0, 0);">clear's list</a></span></button> 
+        <h2>Add a new Todo</h2>
+        <input type="text" id="new-todo-title" placeholder="New Todo">
+        <button onclick="addTodo()">Add Todo</button>
         {% for todo in todos %}
             {% if not todo.completed %}
                 <dev class="todo-contents">
@@ -27,9 +31,7 @@
 
     <img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
 
-    <h2>Add a new Todo</h2>
-    <input type="text" id="new-todo-title" placeholder="New Todo">
-    <button onclick="addTodo()">Add Todo</button>
+
 
     <script>
         async function addTodo() {

@@ -20,7 +20,8 @@ main {
     margin: auto;
     padding: 10px;
     padding-bottom: 20px;
-    width: 600px;
+    width: 550px;
+    min-height: 480px;
     text-align: center;
     background-color: #ffffff;
     z-index: 5;
@@ -34,7 +35,11 @@ h1 {
     color: #9e9e9e;
     font-size: 24px;
 }
-
+h2 {
+    color: #9e9e9e;
+    font-size: 18px;
+    margin-bottom: 0px;
+}
 
 .todo-contents {
     display: flex;
@@ -262,6 +267,87 @@ button {
 .btn-delete span:hover:after {
     width: 100%;
 }
+
+.btn-mode {
+    background: #d8a4ff88;
+    /* background: radial-gradient(circle, rgba(207, 75, 255, 0.525) 0%, rgba(0, 221, 255, 0.634) 100%); */
+    /* line-height: 42px; */
+    padding: 0;
+    border: none;
+    width: 30%;
+}
+.btn-mode span {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.btn-mode:before,
+.btn-mode:after {
+    position: absolute;
+    content: "";
+    height: 0%;
+    width: 1px;
+    box-shadow:
+    -1px -1px 20px 0px rgba(255,255,255,1),
+    -4px -4px 5px 0px rgba(255,255,255,1),
+    7px 7px 20px 0px rgba(0,0,0,.4),
+    4px 4px 5px 0px rgba(0,0,0,.3);
+}
+.btn-mode:before {
+    right: 0;
+    top: 0;
+    transition: all 500ms ease;
+}
+.btn-mode:after {
+    left: 0;
+    bottom: 0;
+    transition: all 500ms ease;
+}
+.btn-mode:hover{
+    background: transparent;
+    color: #6c6c00;
+    box-shadow: none;
+}
+.btn-mode:hover:before {
+    transition: all 500ms ease;
+    height: 100%;
+}
+.btn-mode:hover:after {
+    transition: all 500ms ease;
+    height: 100%;
+}
+.btn-mode span:before,
+.btn-mode span:after {
+    position: absolute;
+    content: "";
+    box-shadow:
+    -1px -1px 20px 0px rgba(255,255,255,1),
+    -4px -4px 5px 0px rgba(255,255,255,1),
+    7px 7px 20px 0px rgba(0,0,0,.4),
+    4px 4px 5px 0px rgba(0,0,0,.3);
+}
+.btn-mode span:before {
+    left: 0;
+    top: 0;
+    width: 0%;
+    height: .5px;
+    transition: all 500ms ease;
+}
+.btn-mode span:after {
+    right: 0;
+    bottom: 0;
+    width: 0%;
+    height: .5px;
+    transition: all 500ms ease;
+}
+.btn-mode span:hover:before {
+    width: 100%;
+}
+.btn-mode span:hover:after {
+    width: 100%;
+}
+
 
 /* ul {
     list-style-type: none;
