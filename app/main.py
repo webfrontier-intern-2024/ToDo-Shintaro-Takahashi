@@ -10,6 +10,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from typing import List
 from fastapi.responses import HTMLResponse  
+from fastapi.security import OAuth2PasswordBearer
+
 
 
 
@@ -27,6 +29,8 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # データベースモデルを作成
 models.Base.metadata.create_all(bind=engine)
@@ -78,3 +82,8 @@ def toggle_todo_completion(todo_id: int, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_todo)
     return db_todo
+
+@app.get("/todos/")
+def read_todos(skip: int = 0, limit: int = 10, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    # 認証されたユーザーのみがアクセスできるようにする
+    return crud.get_todos(db, skip=skip, limit=limit)

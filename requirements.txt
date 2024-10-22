@@ -5,3 +5,5 @@ alembic
 psycopg2-binary
 jinja2
 
+passlib
+python-multipart
