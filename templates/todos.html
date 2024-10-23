@@ -3,45 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <title>Todo List with Tags</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}"> -->
 </head>
+
 <body>
     <main>
-        <h1>Todo List</h1>
-        <button class="custom-btn btn-mode"><span><a href="clear" style="text-decoration:none; color:rgb(0, 0, 0);">clear's list</a></span></button> 
+        <h1>Todo List with Tags</h1>
+        <button class="custom-btn btn-mode">
+            <span><a href="clear" style="text-decoration:none; color:rgb(0, 0, 0);">Clear's List</a></span>
+        </button> 
+
         <h2>Add a new Todo</h2>
         <input type="text" id="new-todo-title" placeholder="New Todo">
         <button onclick="addTodo()">Add Todo</button>
-        {% for todo in todos %}
-            {% if not todo.completed %}
-                <dev class="todo-contents">
-                    <dev class="todo-name">{{ todo.title }}</dev>
-                    <dev class="todo-status">
-                        <dev class="status">{% if not todo.completed %}No yet{% endif %}</dev>
-                        <dev class="buttons">
-                            <button class="custom-btn btn-delete" onclick="deleteTodo({{ todo.id }})"><span>DELETE</span></button>
-                            <button class="custom-btn btn-clear" onclick="updateTodo({{ todo.id }})"><span>CLEAR</span></button>
-                        </dev>
-                    </dev>
-                </dev>
-            {% endif %}
-        {% endfor %}
-    </main>
+
+        <h2>Todos and Tags</h2>
+        {% for item in todos %}
+        <div class="todo-contents">
+            <div class="todo-name">
+                <strong>Todo:</strong> {{ item.todo_title }} 
+            </div>
+            <div class="todo-tag">
+                <strong>Tag:</strong> {{ item.tag_name }}
+            </div>
+            <div class="todo-status">
+                <div class="status">{% if not item.completed %}Not yet{% endif %}</div>
+                <div class="buttons">
+                    <button class="custom-btn btn-delete" onclick="deleteTodo({{ item.todo_id }})"><span>DELETE</span></button>
+                    <button class="custom-btn btn-clear" onclick="updateTodo({{ item.todo_id }})"><span>CLEAR</span></button>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>No todos available</p>
+    {% endfor %}
+            </main>
 
     <img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
-
-
 
     <script>
         async function addTodo() {
             const title = document.getElementById('new-todo-title').value;
-                console.log('Adding new Todo:', title);
+            console.log('Adding new Todo:', title);
 
-                if (!title.trim()) {
+            if (!title.trim()) {
                 alert('Please enter a title');
                 return;
             }
+
             const response = await fetch('/todos/', {
                 method: 'POST',
                 headers: {
@@ -49,6 +59,7 @@
                 },
                 body: JSON.stringify({ title: title }),
             });
+
             if (response.ok) {
                 alert('Todo added!');
                 window.location.reload();
@@ -59,14 +70,14 @@
             }
         }
 
-
         async function deleteTodo(todoId) {
             const response = await fetch(`/todos/${todoId}`, {
                 method: 'DELETE',
             });
+
             if (!response.ok) {
                 alert('Failed to delete Todo.');
-            }else {
+            } else {
                 window.location.reload();
             }
         }
@@ -78,13 +89,13 @@
                     'Content-Type': 'application/json',
                 }
             });
+
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error('Failed to update Todo:', errorText);
                 alert(`Failed to update Todo: ${errorText}`);
             } else {
                 window.location.reload();
-
             }
         }
     </script>
