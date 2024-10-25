@@ -28,7 +28,6 @@ def create_todo(db: Session, todo: schemas.TodoCreate):
 
 # Unionテーブルを使用して、todosとtagsを取得するメソッド
 def get_todos_with_tags(db: Session, skip: int = 0, limit: int = 100):
-    # Unionを使って関連するtodosとtagsを取得
     results = (
         db.query(models.Todo, models.Tag)
         .join(models.Union, models.Todo.id == models.Union.todo_id)
@@ -37,13 +36,13 @@ def get_todos_with_tags(db: Session, skip: int = 0, limit: int = 100):
         .limit(limit)
         .all()
     )
-    # 結果を整理して返す
+
     todos_with_tags = []
     for todo, tag in results:
         todos_with_tags.append({
             "todo_id": todo.id,
             "todo_title": todo.title,
             "tag_id": tag.id,
-            "tag_name": tag.tag
+            "tag_name": tag.name  # 修正：tag.tag -> tag.name（モデル定義と一致させる）
         })
     return todos_with_tags
