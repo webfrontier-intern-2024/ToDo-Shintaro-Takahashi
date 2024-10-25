@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List with Tags</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}"> -->
 </head>
 
 <body>
@@ -19,26 +18,12 @@
         <button onclick="addTodo()">Add Todo</button>
 
         <h2>Todos and Tags</h2>
-        {% for item in todos %}
-        <div class="todo-contents">
-            <div class="todo-name">
-                <strong>Todo:</strong> {{ item.todo_title }} 
-            </div>
-            <div class="todo-tag">
-                <strong>Tag:</strong> {{ item.tag_name }}
-            </div>
-            <div class="todo-status">
-                <div class="status">{% if not item.completed %}Not yet{% endif %}</div>
-                <div class="buttons">
-                    <button class="custom-btn btn-delete" onclick="deleteTodo({{ item.todo_id }})"><span>DELETE</span></button>
-                    <button class="custom-btn btn-clear" onclick="updateTodo({{ item.todo_id }})"><span>CLEAR</span></button>
-                </div>
-            </div>
-        </div>
-    {% else %}
-        <p>No todos available</p>
-    {% endfor %}
-            </main>
+        {% for todo in union %}
+            {{ todo.title }}
+            <button class="custom-btn btn-delete" onclick="deleteTodo({{ todo.id }})">DELETE</button>
+            <button class="custom-btn btn-clear" onclick="updateTodo({{ todo.id }})">ReTRY</button>
+        {% endfor %}
+    </main>
 
     <img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
 
@@ -57,7 +42,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ title: title }),
+                body: JSON.stringify({ title: title }),  // tag_idなどがあれば追加
             });
 
             if (response.ok) {

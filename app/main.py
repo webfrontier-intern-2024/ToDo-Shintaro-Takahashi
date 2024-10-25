@@ -8,8 +8,11 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from typing import List
 from fastapi.responses import HTMLResponse  
+import urllib.parse  # 追加：パスワードのエスケープに使用
 
-DATABASE_URL = "postgresql://codeserver:rH8,KeGa@localhost/todo_app"
+# パスワードをエスケープ
+password = urllib.parse.quote_plus("rH8,KeGa")
+DATABASE_URL = f"postgresql://codeserver:{password}@localhost/todo_app"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -50,10 +53,11 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
 
 @app.get("/todos/index", response_class=HTMLResponse)
 def read_todos_html(request: Request, db: Session = Depends(get_db)):
-    todos_with_tags = [
-        {"todo_id": 1, "todo_title": "Sample Todo", "tag_name": "Sample Tag"}
-    ]  # 仮のデータを挿入してエラーハンドリング
+    todos_with_tags = crud.get_todos_with_tags(db)
+    if not todos_with_tags:
+        print("No todos found or error occurred")
     return templates.TemplateResponse("todos.html", {"request": request, "todos": todos_with_tags})
+
 
 # TodosをクリアするHTML用エンドポイント
 @app.get("/todos/clear", response_class=HTMLResponse)
