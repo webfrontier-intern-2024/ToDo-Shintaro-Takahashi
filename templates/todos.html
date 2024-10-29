@@ -1,92 +1,209 @@
 <!DOCTYPE html>
-<html lang="ja">
+
+<html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Todo List</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
-</head>
-<body>
-    <main>
-        <h1>Todo List</h1>
-        <button class="custom-btn btn-mode"><span><a href="clear" style="text-decoration:none; color:rgb(0, 0, 0);">clear's list</a></span></button> 
-        <h2>Add a new Todo</h2>
-        <input type="text" id="new-todo-title" placeholder="New Todo">
-        <button onclick="addTodo()">Add Todo</button>
-        {% for todo in todos %}
-            {% if not todo.completed %}
-                <dev class="todo-contents">
-                    <dev class="todo-name">{{ todo.title }}</dev>
-                    <dev class="todo-status">
-                        <dev class="status">{% if not todo.completed %}No yet{% endif %}</dev>
-                        <dev class="buttons">
-                            <button class="custom-btn btn-delete" onclick="deleteTodo({{ todo.id }})"><span>DELETE</span></button>
-                            <button class="custom-btn btn-clear" onclick="updateTodo({{ todo.id }})"><span>CLEAR</span></button>
-                        </dev>
-                    </dev>
-                </dev>
-            {% endif %}
-        {% endfor %}
-    </main>
 
-    <img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
-
-
+    <link rel="stylesheet" href="/static/style.css">
 
     <script>
-        async function addTodo() {
-            const title = document.getElementById('new-todo-title').value;
-                console.log('Adding new Todo:', title);
 
-                if (!title.trim()) {
-                alert('Please enter a title');
-                return;
-            }
-            const response = await fetch('/todos/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ title: title }),
-            });
+        async function deleteTodo(id) {
+
+            const response = await fetch(`/todos/${id}`, { method: 'DELETE' });
+
             if (response.ok) {
-                alert('Todo added!');
-                window.location.reload();
-            } else {
-                const errorText = await response.text();
-                console.error('Failed to add Todo:', errorText);
-                alert('Failed to add Todo.');
+
+                document.getElementById(`todo-${id}`).remove();
+
             }
+
         }
 
 
-        async function deleteTodo(todoId) {
-            const response = await fetch(`/todos/${todoId}`, {
-                method: 'DELETE',
-            });
-            if (!response.ok) {
-                alert('Failed to delete Todo.');
-            }else {
-                window.location.reload();
-            }
-        }
 
-        async function updateTodo(todoId) {
-            const response = await fetch(`/todos/${todoId}/toggle`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
+        async function toggleComplete(id) {
+
+            const response = await fetch(`/todos/${id}/complete`, { method: 'POST' });
+
+            if (response.ok) {
+
+                const todoItem = document.getElementById(`todo-${id}`);
+
+                const statusElement = todoItem.querySelector('.status');
+
+                if (statusElement.innerText === 'Pending') {
+
+                    statusElement.innerText = 'Completed';
+
+                } else {
+
+                    statusElement.innerText = 'Pending';
+
                 }
-            });
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Failed to update Todo:', errorText);
-                alert(`Failed to update Todo: ${errorText}`);
-            } else {
-                window.location.reload();
 
             }
+
         }
+
+
+
+        async function editTodo(id) {
+
+            const newTitle = prompt("Enter new title:");
+
+            if (newTitle) {
+
+                const response = await fetch(`/todos/${id}`, {
+
+                    method: 'PUT',
+
+                    headers: { 'Content-Type': 'application/json' },
+
+                    body: JSON.stringify({ title: newTitle })
+
+                });
+
+                if (response.ok) {
+
+                    const todoItem = document.getElementById(`todo-${id}`);
+
+                    todoItem.querySelector('.title').innerText = newTitle;
+
+                }
+
+            }
+
+        }
+
+
+
+        async function deleteTag(id) {
+
+            const response = await fetch(`/tags/${id}`, { method: 'DELETE' });
+
+            if (response.ok) {
+
+                document.getElementById(`tag-${id}`).remove();
+
+            }
+
+        }
+
     </script>
+
+</head>
+
+<body>
+
+    <h1>Todo List</h1>
+
+    
+
+    <!-- Form to add a new Todo with a Tag -->
+
+    <form action="/todos/" method="post">
+
+        <label for="todo">New Todo:</label>
+
+        <input type="text" id="todo" name="title" required>
+
+        
+
+        <label for="tag">Select Tag:</label>
+
+        <select id="tag" name="tag_id">
+
+            {% for tag in tags %}
+
+                <option value="{{ tag.id }}">{{ tag.name }}</option>
+
+            {% endfor %}
+
+        </select>
+
+
+
+        <button type="submit">Add Todo</button>
+
+    </form>
+
+    
+
+    <!-- Form to add a new Tag -->
+
+    <form action="/tags/" method="post" style="margin-top: 20px;">
+
+        <label for="new_tag">Add New Tag:</label>
+
+        <input type="text" id="new_tag" name="name" required>
+
+        <button type="submit">Add Tag</button>
+
+    </form>
+
+
+
+    <h2>Todos</h2>
+
+    <ul>
+
+        {% for todo in todos %}
+
+            <li id="todo-{{ todo.id }}">
+
+                <span class="title">{{ todo.title }}</span> - 
+
+                <span class="status">{% if todo.completed %}Completed{% else %}Pending{% endif %}</span> - 
+
+                <span class="tags">
+
+                    {% for tag in todo.tags %}{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}
+
+                </span>
+
+                <button onclick="toggleComplete({{ todo.id }})">
+
+                    {% if todo.completed %}Mark as Pending{% else %}Mark as Completed{% endif %}
+
+                </button>
+
+                <button onclick="editTodo({{ todo.id }})">Edit</button>
+
+                <button onclick="deleteTodo({{ todo.id }})">Delete</button>
+
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+    
+
+    <h2>Tags</h2>
+
+    <ul>
+
+        {% for tag in tags %}
+
+            <li id="tag-{{ tag.id }}">
+
+                {{ tag.name }}
+
+                <button onclick="deleteTag({{ tag.id }})">Delete</button>
+
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
 </body>
+
 </html>

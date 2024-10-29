@@ -1,14 +1,33 @@
-# データベースのモデルの定義を行うファイル
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
+from .database import Base
 
-from sqlalchemy import Column, Integer, String, Boolean
-from .database import Base  # Base は declarative_base() で定義されており、すべてのモデル（テーブル定義）が継承する基盤クラス
- 
-class Todo(Base):   # ここでDBに対応し、SQLAlchemyがDBを操作できるようになる
-    __tablename__ = "todos" # 名前の定義
+class Todo(Base):
+    __tablename__ = "todos"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)  # String 型で定義
+    title = Column(String, index=True)
     completed = Column(Boolean, default=False)
 
-# indexをTrueにすると、そのカラムにインデックスが作成される。インデックスは、データベースの検索を高速化するためのもので、インデックスが作成されているカラムでの検索は高速になる。インデックスを作成することで、データベースの容量は増えるが、検索速度が向上する。
+    # Relationship with Union table (intermediate table for Todo and Tag)
+    tags = relationship("Union", back_populates="todo")
 
+class Tag(Base):
+    __tablename__ = "tags"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True, unique=True)
+
+    # Relationship with Union table
+    todos = relationship("Union", back_populates="tag")
+
+class Union(Base):
+    __tablename__ = "union"
+
+    id = Column(Integer, primary_key=True, index=True)
+    todo_id = Column(Integer, ForeignKey("todos.id"))
+    tag_id = Column(Integer, ForeignKey("tags.id"))
+
+    # Relationship definitions
+    todo = relationship("Todo", back_populates="tags")
+    tag = relationship("Tag", back_populates="todos")
