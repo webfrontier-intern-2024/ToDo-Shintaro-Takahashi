@@ -44,13 +44,13 @@ def create_todo_with_tag(db: Session, todo: schemas.TodoCreate, tag_id: int = No
 
     if tag_id:
 
-        db_union = models.Union(todo_id=db_todo.id, tag_id=tag_id)
+        db_tag = db.query(models.Tag).filter(models.Tag.id == tag_id).first()
 
-        db.add(db_union)
+        if db_tag:
 
-        db.commit()
+            db_todo.tags.append(db_tag)
 
-        db.refresh(db_union)
+            db.commit()
 
     return db_todo
 
@@ -142,38 +142,3 @@ def delete_tag(db: Session, tag_id: int):
 
     return db_tag
 
-
-
-# CRUD for Union (association table)
-
-def create_union(db: Session, todo_id: int, tag_id: int):
-
-    db_union = models.Union(todo_id=todo_id, tag_id=tag_id)
-
-    db.add(db_union)
-
-    db.commit()
-
-    db.refresh(db_union)
-
-    return db_union
-
-
-
-def get_unions(db: Session, skip: int = 0, limit: int = 100):
-
-    return db.query(models.Union).offset(skip).limit(limit).all()
-
-
-
-def delete_union(db: Session, union_id: int):
-
-    db_union = db.query(models.Union).filter(models.Union.id == union_id).first()
-
-    if db_union:
-
-        db.delete(db_union)
-
-        db.commit()
-
-    return db_union

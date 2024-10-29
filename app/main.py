@@ -19,9 +19,6 @@ from fastapi.responses import HTMLResponse
 import os
 
 
-
-# Initialize FastAPI application
-
 app = FastAPI()
 
 
@@ -105,7 +102,6 @@ async def toggle_complete(todo_id: int, db: Session = Depends(get_db)):
     todo = crud.toggle_complete(db=db, todo_id=todo_id)
 
     if not todo:
-
         raise HTTPException(status_code=404, detail="Todo not found")
 
     return RedirectResponse(url="/", status_code=303)
