@@ -1,208 +1,105 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Todo List</title>
-
     <link rel="stylesheet" href="/static/style.css">
-
     <script>
-
         async function deleteTodo(id) {
-
             const response = await fetch(`/todos/${id}`, { method: 'DELETE' });
-
             if (response.ok) {
-
                 document.getElementById(`todo-${id}`).remove();
-
             }
-
         }
-
-
 
         async function toggleComplete(id) {
-
             const response = await fetch(`/todos/${id}/complete`, { method: 'POST' });
-
             if (response.ok) {
-
                 const todoItem = document.getElementById(`todo-${id}`);
-
                 const statusElement = todoItem.querySelector('.status');
-
                 if (statusElement.innerText === 'Pending') {
-
                     statusElement.innerText = 'Completed';
-
                 } else {
-
                     statusElement.innerText = 'Pending';
-
                 }
-
             }
-
         }
-
-
 
         async function editTodo(id) {
-
             const newTitle = prompt("Enter new title:");
-
             if (newTitle) {
-
                 const response = await fetch(`/todos/${id}`, {
-
                     method: 'PUT',
-
                     headers: { 'Content-Type': 'application/json' },
-
                     body: JSON.stringify({ title: newTitle })
-
                 });
-
                 if (response.ok) {
-
                     const todoItem = document.getElementById(`todo-${id}`);
-
                     todoItem.querySelector('.title').innerText = newTitle;
-
                 }
-
             }
-
         }
-
-
 
         async function deleteTag(id) {
-
             const response = await fetch(`/tags/${id}`, { method: 'DELETE' });
-
             if (response.ok) {
-
                 document.getElementById(`tag-${id}`).remove();
-
             }
-
         }
-
     </script>
-
 </head>
 
 <body>
-
+    <main>
+    <img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
     <h1>Todo List</h1>
-
-    
-
     <!-- Form to add a new Todo with a Tag -->
 
     <form action="/todos/" method="post">
-
         <label for="todo">New Todo:</label>
-
         <input type="text" id="todo" name="title" required>
-
-        
-
         <label for="tag">Select Tag:</label>
-
         <select id="tag" name="tag_id">
-
             {% for tag in tags %}
-
                 <option value="{{ tag.id }}">{{ tag.name }}</option>
-
             {% endfor %}
-
         </select>
-
-
-
         <button type="submit">Add Todo</button>
-
     </form>
-
-    
 
     <!-- Form to add a new Tag -->
-
     <form action="/tags/" method="post" style="margin-top: 20px;">
-
         <label for="new_tag">Add New Tag:</label>
-
         <input type="text" id="new_tag" name="name" required>
-
         <button type="submit">Add Tag</button>
-
     </form>
-
-
 
     <h2>Todos</h2>
 
-    <ul>
-
         {% for todo in todos %}
-
-            <li id="todo-{{ todo.id }}">
-
-                <span class="title">{{ todo.title }}</span> - 
-
-                <span class="status">{% if todo.completed %}Completed{% else %}Pending{% endif %}</span> - 
-
-                <span class="tags">
-
-                    {% for tag in todo.tags %}{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}
-
-                </span>
-
-                <button onclick="toggleComplete({{ todo.id }})">
-
-                    {% if todo.completed %}Mark as Pending{% else %}Mark as Completed{% endif %}
-
-                </button>
-
-                <button onclick="editTodo({{ todo.id }})">Edit</button>
-
-                <button onclick="deleteTodo({{ todo.id }})">Delete</button>
-
-            </li>
-
+        <dev class="todo-contents">
+                <span class="todo-name">{{ todo.title }}
+                     - {% for tag in todo.tags %}{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}
+                </span><br>
+                <span class="todo-status">
+                    <span class="status">{% if todo.completed %}Completed{% else %}Pending{% endif %}</span>
+                    <span class="status">
+                        <button onclick="toggleComplete({{ todo.id }})" class="custom-btn btn-clear">
+                            {% if todo.completed %}->{% else %}Completed{% endif %}
+                        </button>
+                        <button onclick="editTodo({{ todo.id }})" class="custom-btn btn-edit">Edit</button>
+                        <button onclick="deleteTodo({{ todo.id }})" class="custom-btn btn-delete">Delete</button>
+                    </span>
+        </dev>
         {% endfor %}
-    </ul>
 
-     
 
     <h2>Tags</h2>
-
-    <ul>
-
         {% for tag in tags %}
-
-            <li id="tag-{{ tag.id }}">
-
                 {{ tag.name }}
-
-                <button onclick="deleteTag({{ tag.id }})">Delete</button>
-
-            </li>
-
+                <button onclick="deleteTag({{ tag.id }})" class="custom-btn btn-delete">Delete</button><br>
         {% endfor %}
-
-    </ul>
-
+    </main>
 </body>
-
 </html>
