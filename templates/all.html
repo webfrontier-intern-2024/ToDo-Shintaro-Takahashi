@@ -51,15 +51,11 @@
                 <a href="/"><h1>Todo List</h1></a>
             </dev>
             <dev class="header-menu">
-                <h1>Tags</h1>
+                <a href="tags" class="header-menu-link"><h1>Tags</h1></a>
                 <h1>Alert</h1>
             </dev>
     </header>
     <main>
-        <img src="https://img.freepik.com/premium-photo/abstract-blurred-sky-colorful_40299-22.jpg">
-
-
-        <h2>Todos</h2>
         {% for todo in todos %}
             <div class="todo-contents" id="todo-{{ todo.id }}">
                 <span class="todo-name">{{ todo.title }}
@@ -67,6 +63,7 @@
                 </span><br>
                 <span class="todo-status">
                     <span class="status">{% if todo.completed %}Completed{% else %}Pending{% endif %}</span>
+                    <br>
                     <span class="status">
                         <button onclick="toggleComplete({{ todo.id }})" class="custom-btn btn-clear">
                             {% if todo.completed %}Mark as Pending{% else %}Mark as Completed{% endif %}
@@ -77,14 +74,6 @@
                 </span>
             </div>
             <br>
-        {% endfor %}
-
-        <h2>Tags</h2>
-        {% for tag in tags %}
-            <div id="tag-{{ tag.id }}">
-                {{ tag.name }}
-                <button onclick="deleteTag({{ tag.id }})" class="custom-btn btn-delete">Delete</button>
-            </div><br>
         {% endfor %}
     </main>
 
