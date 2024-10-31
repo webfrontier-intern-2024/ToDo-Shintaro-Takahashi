@@ -57,7 +57,6 @@
     </header>
     <main>
         {% for todo in todos %}
-        {% if not todo.completed %}
             <div class="todo-contents" id="todo-{{ todo.id }}">
                 <span class="todo-name">{{ todo.title }}
                     - {% for tag in todo.tags %}{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}
@@ -75,11 +74,8 @@
                 </span>
             </div>
             <br>
-            {% endif %}
         {% endfor %}
     </main>
-
-
 
     <footer>
         <div class="footer-contents">

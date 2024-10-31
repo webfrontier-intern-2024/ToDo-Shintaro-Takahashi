@@ -56,30 +56,21 @@
             </dev>
     </header>
     <main>
-        {% for todo in todos %}
-        {% if not todo.completed %}
-            <div class="todo-contents" id="todo-{{ todo.id }}">
-                <span class="todo-name">{{ todo.title }}
-                    - {% for tag in todo.tags %}{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}
-                </span><br>
-                <span class="todo-status">
-                    <span class="status">{% if todo.completed %}Completed{% else %}Pending{% endif %}</span>
-                    <br>
-                    <span class="status">
-                        <button onclick="toggleComplete({{ todo.id }})" class="custom-btn btn-clear">
-                            {% if todo.completed %}Mark as Pending{% else %}Mark as Completed{% endif %}
-                        </button>
-                        <button onclick="editTodo({{ todo.id }})" class="custom-btn btn-edit">Edit</button>
-                        <button onclick="deleteTodo({{ todo.id }})" class="custom-btn btn-delete">Delete</button>
-                    </span>
-                </span>
-            </div>
-            <br>
-            {% endif %}
+        <!-- Form to add a new Tag -->
+        <form action="/tags/" method="post" style="margin-top: 20px;">
+            <label for="new_tag">Add New Tag:</label>
+            <input type="text" id="new_tag" name="name" required>
+            <button type="submit">Add Tag</button>
+        </form>
+
+        <h2>Tags</h2>
+        {% for tag in tags %}
+            <div id="tag-{{ tag.id }}">
+                {{ tag.name }}
+                <button onclick="deleteTag({{ tag.id }})" class="custom-btn btn-delete">Delete</button>
+            </div><br>
         {% endfor %}
     </main>
-
-
 
     <footer>
         <div class="footer-contents">

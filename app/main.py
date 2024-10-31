@@ -49,6 +49,46 @@ async def read_todos(request: Request, db: Session = Depends(get_db)):
 
     return templates.TemplateResponse("todos.html", {"request": request, "todos": todos, "tags": tags})
 
+@app.get("/add", response_class=HTMLResponse)
+
+async def read_todos(request: Request, db: Session = Depends(get_db)):
+
+    todos = crud.get_todos(db)
+
+    tags = crud.get_tags(db)
+
+    return templates.TemplateResponse("add.html", {"request": request, "todos": todos, "tags": tags})
+
+@app.get("/all", response_class=HTMLResponse)
+
+async def read_todos(request: Request, db: Session = Depends(get_db)):
+
+    todos = crud.get_todos(db)
+
+    tags = crud.get_tags(db)
+
+    return templates.TemplateResponse("all.html", {"request": request, "todos": todos, "tags": tags})
+
+@app.get("/completed", response_class=HTMLResponse)
+
+async def read_todos(request: Request, db: Session = Depends(get_db)):
+
+    todos = crud.get_todos(db)
+
+    tags = crud.get_tags(db)
+
+    return templates.TemplateResponse("completed.html", {"request": request, "todos": todos, "tags": tags})
+
+@app.get("/tags", response_class=HTMLResponse)
+
+async def read_todos(request: Request, db: Session = Depends(get_db)):
+
+    todos = crud.get_todos(db)
+
+    tags = crud.get_tags(db)
+
+    return templates.TemplateResponse("tags.html", {"request": request, "todos": todos, "tags": tags})
+
 
 
 @app.post("/todos/", response_class=RedirectResponse)
