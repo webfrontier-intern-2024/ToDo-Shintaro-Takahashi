@@ -3,6 +3,7 @@ body {
     margin: auto;
     text-align: center;
     color: #ffffff;
+    background-color: #000000;
 }
 
 img {
@@ -53,14 +54,13 @@ main {
     margin-right: auto;
     margin-top: 70px;
     margin-bottom: 80px;
-    padding: 10px;
-    padding-bottom: 20px;
-    min-height: 480px;
-    width: 500px;
+    height: 100%;
     max-width: 600px;
     text-align: center;
     background-color: #000000;
     z-index: 5;
+    border-left: 1px solid #ffffff; /* ボーダーの幅とスタイルを追加 */
+    border-right: 1px solid #ffffff; /* ボーダーの幅とスタイルを追加 */
 }
 
 footer {
